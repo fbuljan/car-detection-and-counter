@@ -1,7 +1,8 @@
-import os
+from torchmetrics.detection.mean_ap import MeanAveragePrecision
 import time
 import torch
 from torch.utils.data import DataLoader
+from metric_utils import convert_targets_for_metrics, postprocess_predictions
 from dataset import CarDataset
 from encode_targets import encode_targets
 from loss import yolo_loss
@@ -15,8 +16,8 @@ def log(msg):
         f.write(msg + "\n")
 
 # Hyperparameters
-epochs = 10
-batch_size = 4
+epochs = 700
+batch_size = 12
 learning_rate = 1e-4
 image_size = (384, 640)
 grid_size = (24, 40)
@@ -46,6 +47,8 @@ val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, colla
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = SimpleYOLO(num_classes=1).to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+
+metric = MeanAveragePrecision(iou_type="bbox")
 
 # Training loop
 start_time = time.time()
@@ -81,19 +84,28 @@ for epoch in range(epochs):
     log(f"Epoch {epoch + 1} completed in {epoch_time:.1f}s - Avg loss: {avg_loss:.4f}")
 
     # Validation
-    model.eval()
-    val_loss = 0
-    with torch.no_grad():
-        for images, targets in val_loader:
-            images = images.to(device)
-            preds = model(images)
-            targets_encoded = [encode_targets(t) for t in targets]
-            targets_batch = torch.stack(targets_encoded).to(device)
-            loss = yolo_loss(preds, targets_batch)
-            val_loss += loss.item()
+    if (epoch + 1) % 10 == 0:
+        model.eval()
+        val_loss = 0
+        metric.reset()
 
-    val_avg = val_loss / len(val_loader)
-    log(f"Validation loss: {val_avg:.4f}")
+        with torch.no_grad():
+            for images, targets in val_loader:
+                images = images.to(device)
+                preds = model(images)
+
+                # Pretvori predikcije u COCO-style format
+                preds_list = postprocess_predictions(preds)  # moraš napisati
+                targets_list = convert_targets_for_metrics(targets)  # moraš napisati
+
+                metric.update(preds_list, targets_list)
+
+                targets_encoded = [encode_targets(t) for t in targets]
+                targets_batch = torch.stack(targets_encoded).to(device)
+                val_loss += yolo_loss(preds, targets_batch).item()
+
+                results = metric.compute()
+                print(results)
 
 # Save model
 torch.save(model.state_dict(), "yolo_custom_car_model.pth")
