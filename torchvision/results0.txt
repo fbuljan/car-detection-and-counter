@@ -1,0 +1,16 @@
+📊 Faster R-CNN mAP Results:
+map: 0.2439
+map_50: 0.7768
+map_75: 0.0645
+map_small: -1.0000
+map_medium: 0.2457
+map_large: 0.4650
+mar_1: 0.2384
+mar_10: 0.3521
+mar_100: 0.3575
+mar_small: -1.0000
+mar_medium: 0.3371
+mar_large: 0.4727
+map_per_class: -1.0000
+mar_100_per_class: -1.0000
+classes: [1, 3, 5, 6, 8, 9, 10, 11, 13, 14, 15, 16, 28, 34, 37, 38, 44, 53, 62]
