@@ -1,0 +1,16 @@
+📊 Faster R-CNN mAP Results:
+map: 0.6396
+map_50: 0.9987
+map_75: 0.7541
+map_small: -1.0000
+map_medium: 0.6284
+map_large: 0.7378
+mar_1: 0.5233
+mar_10: 0.6973
+mar_100: 0.6973
+mar_small: -1.0000
+mar_medium: 0.6823
+mar_large: 0.7818
+map_per_class: -1.0000
+mar_100_per_class: -1.0000
+classes: 1.0000

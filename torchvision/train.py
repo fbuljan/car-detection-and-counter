@@ -1,116 +1,96 @@
 import os
-import time
 import torch
 from torch.utils.data import DataLoader
 from torchvision.models.detection import fasterrcnn_resnet50_fpn
+from torchvision.datasets import CocoDetection
+from torchvision.transforms import ToTensor
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
-from torchmetrics.detection.mean_ap import MeanAveragePrecision
 from tqdm import tqdm
-from dataset import CarDataset
 
-# Configuration
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-epochs = 3
-batch_size = 4
-lr = 1e-4
-image_size = (384, 640)
-model_path = "models/fasterrcnn_finetuned.pth"
-train_images_dir = "datasets/cars/images/train"
-train_labels_dir = "datasets/cars/labels/train"
-val_images_dir = "datasets/cars/images/val"
-val_labels_dir = "datasets/cars/labels/val"
+# ----------------- CONFIG -----------------
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+NUM_CLASSES = 2  # background + car
+BATCH_SIZE = 4
+NUM_EPOCHS = 10
+LR = 1e-4
+MODEL_PATH = "models/fasterrcnn_car.pth"
 
-# Dataset & loader
-train_dataset = CarDataset(train_images_dir, train_labels_dir, image_size)
-val_dataset = CarDataset(val_images_dir, val_labels_dir, image_size)
+# Paths to dataset
+IMAGE_DIR = "datasets/cars/images/train"
+ANNOTATION_FILE = "datasets/cars/coco_annotations_train.json"
 
+# Map COCO category IDs to model's class indices
+# COCO: car = 3 → local label = 1
+COCO_TO_LOCAL = {3: 1}
+
+# ----------------- DATASET -----------------
 def collate_fn(batch):
-    images = torch.stack([b[0] for b in batch])
-    targets = [b[1] for b in batch]
-    return images, targets
+    return tuple(zip(*batch))
 
-train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
-val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, collate_fn=collate_fn)
+train_dataset = CocoDetection(
+    root=IMAGE_DIR,
+    annFile=ANNOTATION_FILE,
+    transform=ToTensor()
+)
+train_loader = DataLoader(
+    train_dataset,
+    batch_size=BATCH_SIZE,
+    shuffle=True,
+    collate_fn=collate_fn
+)
 
-# Model setup
+# ----------------- MODEL -----------------
 model = fasterrcnn_resnet50_fpn(pretrained=True)
 in_features = model.roi_heads.box_predictor.cls_score.in_features
-model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes=2)
-model.to(device)
+model.roi_heads.box_predictor = FastRCNNPredictor(in_features, NUM_CLASSES)
+model.to(DEVICE)
 
-optimizer = torch.optim.Adam(model.parameters(), lr=lr)
-metric = MeanAveragePrecision(iou_type="bbox")
+optimizer = torch.optim.Adam([p for p in model.parameters() if p.requires_grad], lr=LR)
 
+# ----------------- TRAIN LOOP -----------------
 print("🚀 Starting training...")
-for epoch in range(1, epochs + 1):
+for epoch in range(1, NUM_EPOCHS+1):
     model.train()
-    epoch_loss = 0.0
-    print(f"\n📦 Epoch {epoch}/{epochs}")
-    for i, (images, targets) in enumerate(tqdm(train_loader, desc="Training")):
-        images = [img.to(device) for img in images]
+    total_loss = 0.0
+
+    pbar = tqdm(train_loader, desc=f"Epoch {epoch}/{NUM_EPOCHS}")
+    for images, targets in pbar:
+        images = [img.to(DEVICE) for img in images]
         formatted_targets = []
-        for t in targets:
-            x = t[:, 1] * image_size[1]
-            y = t[:, 2] * image_size[0]
-            w = t[:, 3] * image_size[1]
-            h = t[:, 4] * image_size[0]
-            x1 = x - w / 2
-            y1 = y - h / 2
-            x2 = x + w / 2
-            y2 = y + h / 2
-            boxes = torch.stack([x1, y1, x2, y2], dim=1)
+        for ann_list in targets:
+            boxes = []
+            labels = []
+            for obj in ann_list:
+                coco_id = obj["category_id"]
+                if coco_id not in COCO_TO_LOCAL:
+                    continue
+                local_id = COCO_TO_LOCAL[coco_id]
+                x, y, w, h = obj["bbox"]  # x,y,width,height
+                boxes.append([x, y, x+w, y+h])
+                labels.append(local_id)
+
+            if len(boxes) == 0:
+                # Skip images without valid objects
+                boxes = torch.zeros((0,4), dtype=torch.float32)
+                labels = torch.zeros((0,), dtype=torch.int64)
             formatted_targets.append({
-                "boxes": boxes.to(device),
-                "labels": torch.ones((len(boxes),), dtype=torch.int64).to(device)
+                "boxes": torch.tensor(boxes, dtype=torch.float32).to(DEVICE),
+                "labels": torch.tensor(labels, dtype=torch.int64).to(DEVICE)
             })
 
         loss_dict = model(images, formatted_targets)
         losses = sum(loss for loss in loss_dict.values())
+
         optimizer.zero_grad()
         losses.backward()
         optimizer.step()
-        epoch_loss += losses.item()
 
-    avg_loss = epoch_loss / len(train_loader)
-    print(f"📉 Avg train loss: {avg_loss:.4f}")
+        total_loss += losses.item()
+        pbar.set_postfix({"loss": f"{losses.item():.4f}"})
 
-    model.eval()
-    metric.reset()
-    print("🔍 Running validation...")
-    with torch.no_grad():
-        for images, targets in tqdm(val_loader, desc="Validating"):
-            images = [img.to(device) for img in images]
-            formatted_targets = []
-            for t in targets:
-                x = t[:, 1] * image_size[1]
-                y = t[:, 2] * image_size[0]
-                w = t[:, 3] * image_size[1]
-                h = t[:, 4] * image_size[0]
-                x1 = x - w / 2
-                y1 = y - h / 2
-                x2 = x + w / 2
-                y2 = y + h / 2
-                boxes = torch.stack([x1, y1, x2, y2], dim=1)
-                formatted_targets.append({
-                    "boxes": boxes.to("cpu"),
-                    "labels": torch.ones((len(boxes),), dtype=torch.int64)
-                })
+    print(f"Epoch {epoch} finished. Avg loss: {total_loss/len(train_loader):.4f}")
 
-            preds = model(images)
-            preds_cpu = [{
-                "boxes": p["boxes"].detach().cpu(),
-                "scores": p["scores"].detach().cpu(),
-                "labels": p["labels"].detach().cpu()
-            } for p in preds]
-
-            metric.update(preds_cpu, formatted_targets)
-
-    results = metric.compute()
-    print("📊 Validation results:")
-    for k, v in results.items():
-        print(f"  {k}: {v.item():.4f}" if isinstance(v, torch.Tensor) else f"  {k}: {v}")
-
-# Save model
-os.makedirs("models", exist_ok=True)
-torch.save(model.state_dict(), model_path)
-print(f"\n✅ Model saved to {model_path}")
+# ----------------- SAVE -----------------
+os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+torch.save(model.state_dict(), MODEL_PATH)
+print(f"✅ Model saved to {MODEL_PATH}")
