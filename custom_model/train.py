@@ -16,7 +16,7 @@ def log(msg):
         f.write(msg + "\n")
 
 # Hyperparameters
-epochs = 700
+epochs = 20
 batch_size = 12
 learning_rate = 1e-4
 image_size = (384, 640)
@@ -94,18 +94,23 @@ for epoch in range(epochs):
                 images = images.to(device)
                 preds = model(images)
 
-                # Pretvori predikcije u COCO-style format
-                preds_list = postprocess_predictions(preds)  # moraš napisati
-                targets_list = convert_targets_for_metrics(targets)  # moraš napisati
-
+                # 1) metrics
+                preds_list   = postprocess_predictions(preds)
+                targets_list = convert_targets_for_metrics(targets)
                 metric.update(preds_list, targets_list)
 
-                targets_encoded = [encode_targets(t) for t in targets]
-                targets_batch = torch.stack(targets_encoded).to(device)
+                # 2) loss
+                targets_enc  = [encode_targets(t) for t in targets]
+                targets_batch= torch.stack(targets_enc).to(device)
                 val_loss += yolo_loss(preds, targets_batch).item()
 
-                results = metric.compute()
-                print(results)
+        results = metric.compute()
+        val_avg = val_loss / len(val_loader)
+        log(f"Val loss: {val_avg:.4f}")
+        log(f"Val P: {results.get('precision',0):.4f}, "
+            f"R: {results.get('recall',0):.4f}, "
+            f"mAP@0.5: {results.get('map_50',0):.4f}, "
+            f"mAP@0.5:0.95: {results.get('map',0):.4f}")
 
 # Save model
 torch.save(model.state_dict(), "yolo_custom_car_model.pth")
