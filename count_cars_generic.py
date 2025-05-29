@@ -29,7 +29,7 @@ def detect_with_yolo(model_path, image_path, output_path):
     for box in results.boxes:
         class_id = int(box.cls.item())
         conf = box.conf.item()
-        if class_id == 2:  # COCO car class
+        if class_id == 2:  
             car_count += 1
             x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
             cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
