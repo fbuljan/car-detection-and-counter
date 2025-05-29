@@ -1,0 +1,5 @@
+kod prima 4 argumenta: --model-type, --model-path, --image-path, --output-path
+za --model-type se navodi jedan od sljedecih: 'yolo', 'fasterrcnn-original', 'fasterrcnn-finetuned'
+za --model-path se navodi putanja do modela ako se radi o 'yolo' ili 'fasterrcnn-finetuned', za 'fasterrcnn-original' se putanja ne upisuje
+za --image-path se navodi putanja do originalne slike na kojoj se zele detektirati automobili
+za --output-path se navodi putanja gdje se generira slika s detektiranim automobilima
