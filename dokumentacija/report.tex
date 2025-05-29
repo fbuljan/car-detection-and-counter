@@ -76,15 +76,52 @@ This section will provide a detailed technical overview of the two primary objec
 
 \subsection{YOLO (You Only Look Once)}
 \label{ssec:yolo}
-YOLO is a single-shot detector known for its speed and real-time processing capabilities. Unlike traditional object detection systems that separate the object detection pipeline into distinct stages (e.g., region proposal, classification, non-maximum suppression), YOLO processes the entire image in a single pass. It divides the image into a grid and simultaneously predicts bounding boxes and class probabilities for each grid cell. We will discuss its architectural components, including the backbone network, detection heads, and the loss function used for training. Different versions of YOLO (e.g., YOLOv3, YOLOv4, YOLOv5, YOLOv7) will be briefly mentioned, highlighting their key improvements.
+YOLO is a single-shot detector known for its speed and real-time processing capabilities. Unlike traditional object detection systems that separate the object detection pipeline into distinct stages (e.g., region proposal, classification, non-maximum suppression), YOLO processes the entire image in a single pass. It divides the image into a grid and simultaneously predicts bounding boxes and class probabilities for each grid cell. We will discuss its architectural components, including the backbone network, detection heads, and the loss function used for training.
 
 
+\section{Implementation of YOLO for Car Detection}
+\label{sec:yolo_implementation}
+
+Our YOLO implementation focuses on efficiently detecting and counting cars in images. The core logic revolves around leveraging a \textbf{pre-trained YOLOv8 model} from the \texttt{ultralytics} framework. This choice significantly streamlines the development process by utilizing a model already trained on a vast dataset (COCO), thus benefiting from \textbf{transfer learning} and eliminating the need for extensive custom training.
+
+The implementation follows a clear workflow:
+
+\begin{enumerate}
+    \item \textbf{Model Initialization}: A \texttt{YOLO} object is instantiated, loading the pre-trained weights (e.g., \texttt{yolov8l.pt}). This prepares the deep learning model for inference.
+    \item \textbf{Inference and Result Parsing}: For each input image, the model performs a single forward pass, predicting all potential objects. The results, which include \textbf{bounding box coordinates, class IDs, and confidence scores}, are then extracted.
+    \item \textbf{Car-Specific Filtering}: A crucial step involves filtering these raw detections. Since our goal is car detection, we specifically select detections where the \texttt{class\_id} corresponds to 'car' (which is class ID 2 in the COCO dataset). This ensures that only relevant objects are processed further.
+    \item \textbf{Visualization and Counting}: For each confirmed car detection, its bounding box is drawn on the image, along with a label indicating its class and confidence score. A running count of detected cars is maintained and displayed on the image. This visual feedback is essential for immediate verification of the model's performance.
+    \item \textbf{Automated Batch Processing}: The system is designed to handle entire datasets. It iterates through specified input directories (e.g., \texttt{train}, \texttt{val}, \texttt{test} subsets), automatically loading each image, applying the detection logic, and saving the annotated output to a designated folder.
+\end{enumerate}
+
+In essence, the implementation provides a robust and automated pipeline for car detection, focusing on clear, efficient use of a powerful pre-trained model combined with standard image processing techniques for visualization and data handling.
 
 \subsection{Faster R-CNN (Region-based Convolutional Neural Network)}
 \label{ssec:fastrcnn}
 Faster R-CNN is a two-stage object detector that significantly improved upon its predecessors (R-CNN and Fast R-CNN) by introducing the Region Proposal Network (RPN). The RPN is a fully convolutional network that simultaneously predicts object bounds and objectiveness scores at each position. The proposed regions are then fed into the Fast R-CNN detection network for classification and bounding box regression refinement. 
 
-\subsubsection{Fine tuning Faster R-CNN}
+\section{Implementation of Faster R-CNN: Pre-trained vs. Fine-tuned}
+\label{sec:fasterrcnn_implementations}
+
+Our project implemented Faster R-CNN using two distinct strategies to detect cars: one leveraging a \textbf{generically pre-trained model} and another employing a \textbf{fine-tuned model}. Both methods use the \texttt{torchvision} library for model handling.
+
+\subsection{Pre-trained Faster R-CNN}
+This approach directly utilizes a Faster R-CNN model pre-trained on the \textbf{COCO dataset}. The model comes with extensive knowledge of 80 different object categories, including cars.
+
+\begin{itemize}
+    \item \textbf{Logic}: The model is loaded with its original weights, allowing it to detect cars based on its general understanding from the diverse COCO training data. Car identification relies on matching detected objects to the 'car' class ID (class ID 3) within COCO's existing classifications.
+    \item \textbf{Application}: This method is straightforward, requiring no additional training. It applies a universal object detector to our specific task.
+\end{itemize}
+
+\subsection{Fine-tuned Faster R-CNN}
+This strategy involves adapting a pre-trained Faster R-CNN model to specialize in car detection through \textbf{fine-tuning}.
+
+\begin{itemize}
+    \item \textbf{Logic}: Instead of using the generic COCO weights entirely, we load a model that has undergone additional training on a car-specific dataset. This process re-trains the model's final layers, adjusting its classification capabilities to primarily distinguish between "background" and "car" (often mapping 'car' to class ID 1 in this specialized setup).
+    \item \textbf{Application}: Fine-tuning allows the model to learn more precise and relevant features for car identification, potentially yielding higher accuracy and better performance specifically for our target domain compared to the generically pre-trained version.
+\end{itemize}
+
+By comparing these two implementations, we analyze the impact of \textbf{transfer learning} and task-specific adaptation on the model's effectiveness in car detection.
 
 % --- 3. RESULTS ---
 \section{Results}
@@ -98,7 +135,9 @@ This section presents the results of our experiments with YOLO and Faster R-CNN 
 
 % --- 4. LITERATURE ---
 \bibliographystyle{plainnat} % A popular style for scientific papers
-\bibliography{literature}
+\bibliography{literature} 
+
+
 \label{sec:literature}
 
 
