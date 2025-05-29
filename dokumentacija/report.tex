@@ -1,0 +1,105 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- PACKAGES ---
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref} % For clickable links and citations
+\usepackage[square,numbers,sort&compress]{natbib} % For bibliography management
+\usepackage{geometry} % For page margins
+\geometry{a4paper, margin=1in} % Set 1-inch margins on all sides
+\usepackage{fancyhdr} % For custom headers/footers
+\pagestyle{fancy}
+\fancyhf{} % Clear all header and footer fields
+\fancyhead[L]{Digital Image Processing and Analysis Project} % Left header
+\fancyhead[R]{\thepage} % Right header with page number
+\renewcommand{\headrulewidth}{0.4pt} % Thin line under the header
+\usepackage{setspace} % For line spacing
+\onehalfspacing % Set line spacing to 1.5
+
+% --- DOCUMENT START ---
+\begin{document}
+
+% --- TITLE INFORMATION ---
+\title{\textbf{Digital Image Processing and Analysis Project Report: \\ [0.5em] Object Detection using YOLO and Faster R-CNN}}
+\author{
+    Lovro Akmačić \\
+    \small 0036537589 \\
+    \small Faculty of Electrical Engineering and Computing \\
+    \small lovro.akmacic@fer.hr
+    \and
+    Filip Buljan \\
+    \small 0036539840 \\
+    \small Faculty of Electrical Engineering and Computing \\
+    \small filip.buljan@fer.hr
+    \and
+    Lucia Crvelin \\
+    \small 0036540219 \\
+    \small Faculty of Electrical Engineering and Computing \\
+    \small lucia.crvelin@fer.hr
+    \and
+    Tomislav Čupić \\
+    \small 00365411259 \\
+    \small Faculty of Electrical Engineering and Computing \\
+    \small tomislav.cupic@fer.hr
+    \and
+    Lorena Švenjak \\
+    \small 0119039893 \\
+    \small Faculty of Electrical Engineering and Computing \\
+    \small lorena.svenjak@fer.hr
+}
+\date{\today} % Automatically inserts current date
+
+
+\maketitle % Display the title, authors, and date
+
+% --- ABSTRACT/SUMMARY ---
+\begin{abstract}
+This report details a digital image processing and analysis project focused on object detection. We explore and implement state-of-the-art deep learning models, specifically YOLO (You Only Look Once) and Faster R-CNN (Region-based Convolutional Neural Network), for their efficacy in accurately identifying and localizing objects within images. The project aims to compare the performance, advantages, and limitations of these two prominent architectures in a practical application. We will discuss the theoretical underpinnings of each method, their practical implementation, and the insights gained from their application to a relevant dataset.
+\end{abstract}
+
+\newpage % Start a new page after the abstract
+
+% --- 1. DESCRIPTION OF AREA AND ACTIVITY ---
+\section{Description of Area and Activity}
+\label{sec:intro}
+
+Digital image processing and analysis is a multidisciplinary field at the intersection of computer science, engineering, and mathematics, focusing on methods for manipulating and analyzing digital images. Its applications are vast, ranging from medical imaging and remote sensing to autonomous vehicles and security systems.
+
+Our project delves into the sub-area of object detection, a fundamental task in computer vision that involves identifying instances of semantic objects of a certain class (e.g., humans, cars, animals) in digital images or videos and localizing them by drawing bounding boxes around them. The primary activity of this project involves the application and comparative analysis of two prominent deep learning-based object detection frameworks: YOLO and Faster R-CNN. We will outline the problem statement, the real-world relevance of effective object detection, and the motivation behind choosing these particular methods for our analysis.
+
+% --- 2. OVERVIEW OF METHODS USED: YOLO AND FASTER R-CNN ---
+\section{Overview of Methods Used}
+\label{sec:methods}
+
+This section will provide a detailed technical overview of the two primary object detection methodologies employed in this project: YOLO and Faster R-CNN.
+
+\subsection{YOLO (You Only Look Once)}
+\label{ssec:yolo}
+YOLO is a single-shot detector known for its speed and real-time processing capabilities. Unlike traditional object detection systems that separate the object detection pipeline into distinct stages (e.g., region proposal, classification, non-maximum suppression), YOLO processes the entire image in a single pass. It divides the image into a grid and simultaneously predicts bounding boxes and class probabilities for each grid cell. We will discuss its architectural components, including the backbone network, detection heads, and the loss function used for training. Different versions of YOLO (e.g., YOLOv3, YOLOv4, YOLOv5, YOLOv7) will be briefly mentioned, highlighting their key improvements.
+
+
+
+\subsection{Faster R-CNN (Region-based Convolutional Neural Network)}
+\label{ssec:fastrcnn}
+Faster R-CNN is a two-stage object detector that significantly improved upon its predecessors (R-CNN and Fast R-CNN) by introducing the Region Proposal Network (RPN). The RPN is a fully convolutional network that simultaneously predicts object bounds and objectiveness scores at each position. The proposed regions are then fed into the Fast R-CNN detection network for classification and bounding box regression refinement. 
+
+\subsubsection{Fine tuning Faster R-CNN}
+
+% --- 3. RESULTS ---
+\section{Results}
+\label{sec:results}
+This section presents the results of our experiments with YOLO and Faster R-CNN on a chosen dataset. 
+
+% --- 3. CONCLUSION ---
+\section{Conclusion}
+\label{sec:conclusion}
+
+
+% --- 4. LITERATURE ---
+\bibliographystyle{plainnat} % A popular style for scientific papers
+\bibliography{literature}
+\label{sec:literature}
+
+
+\end{document}
