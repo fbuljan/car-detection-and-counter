@@ -35,7 +35,9 @@ def run_video_detection(args):
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = cap.get(cv2.CAP_PROP_FPS)
 
-    os.makedirs(os.path.dirname(args.output_path), exist_ok=True)
+    output_dir = os.path.dirname(args.output_path)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
     out = cv2.VideoWriter(args.output_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (width, height))
 
     tracker = DeepSort(max_age=30)
@@ -56,8 +58,9 @@ def run_video_detection(args):
         ret, frame = cap.read()
         if not ret:
             break
-        frame = cv2.resize(frame, (640, 360))
+
         frame_num += 1
+        print(f"[INFO] Processing frame {frame_num}...")
         detections = []
 
         if args.model_type == 'yolo':
