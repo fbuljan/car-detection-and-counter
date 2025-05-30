@@ -78,6 +78,10 @@ This section will provide a detailed technical overview of the two primary objec
 \label{ssec:yolo}
 YOLO is a single-shot detector known for its speed and real-time processing capabilities. Unlike traditional object detection systems that separate the object detection pipeline into distinct stages (e.g., region proposal, classification, non-maximum suppression), YOLO processes the entire image in a single pass. It divides the image into a grid and simultaneously predicts bounding boxes and class probabilities for each grid cell. We will discuss its architectural components, including the backbone network, detection heads, and the loss function used for training.
 
+\subsection{Faster R-CNN (Region-based Convolutional Neural Network)}
+\label{ssec:fastrcnn_overview} 
+Faster R-CNN is a two-stage object detector that significantly improved upon its predecessors (R-CNN and Fast R-CNN) by introducing the Region Proposal Network (RPN). The RPN is a fully convolutional network that simultaneously predicts object bounds and objectiveness scores at each position. The proposed regions are then fed into the Fast R-CNN detection network for classification and bounding box regression refinement. We will elaborate on its architecture, including the shared convolutional features, RPN operation, RoI (Region of Interest) pooling, and the classification and regression heads.
+
 
 \section{Implementation of YOLO for Car Detection}
 \label{sec:yolo_implementation}

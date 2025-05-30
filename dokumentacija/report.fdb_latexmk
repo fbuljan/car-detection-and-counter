@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex report"] 1748601553 "report.aux" "report.bbl" "report" 1748601670 0
+["bibtex report"] 1748602060 "report.aux" "report.bbl" "report" 1748602061 0
   "./literature.bib" 1748601261 586 594ec902c9cfe9a39de118da674c6259 ""
   "/usr/local/texlive/2023/texmf-dist/bibtex/bst/natbib/plainnat.bst" 1233624470 26816 ffe5423d2019860bad9f54bc402fac15 ""
-  "report.aux" 1748601670 4041 9025fa7be0d014e64ffda54c9ed0651c "pdflatex"
+  "report.aux" 1748602061 4326 0f66cbe507b8dd641e461275ce603246 "pdflatex"
   (generated)
   "report.bbl"
   "report.blg"
   (rewritten before read)
-["pdflatex"] 1748601670 "/Users/LC/Desktop/car-detection-and-counter/dokumentacija/report.tex" "report.pdf" "report" 1748601670 0
-  "/Users/LC/Desktop/car-detection-and-counter/dokumentacija/report.tex" 1748601669 24166 2c049aa0ecf70b5e5061c51fa5ead989 ""
+["pdflatex"] 1748602060 "/Users/LC/Desktop/car-detection-and-counter/dokumentacija/report.tex" "report.pdf" "report" 1748602061 0
+  "/Users/LC/Desktop/car-detection-and-counter/dokumentacija/report.tex" 1748602059 24872 66421921a1484df7fc93dca6e29bf2a4 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/jknappen/ec/tcrm1200.tfm" 1136768653 1536 74b7293ec3713bb7fdca8dd1bd1f469c ""
@@ -89,10 +89,10 @@
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1699361199 4623355 b8cad38412faebe1ce5b780a45db67bd ""
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1699361152 7883460 208b230ddbdd17f914eb8ea78e19c312 ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
-  "report.aux" 1748601670 4041 9025fa7be0d014e64ffda54c9ed0651c "pdflatex"
-  "report.bbl" 1748601553 900 d888a2025ea042c9927d3861663f630f "bibtex report"
-  "report.out" 1748601670 3252 75450c4b4f0b7ca1a46514564b3a42a3 "pdflatex"
-  "report.tex" 1748601669 24166 2c049aa0ecf70b5e5061c51fa5ead989 ""
+  "report.aux" 1748602061 4326 0f66cbe507b8dd641e461275ce603246 "pdflatex"
+  "report.bbl" 1748602060 900 d888a2025ea042c9927d3861663f630f "bibtex report"
+  "report.out" 1748602061 3611 a998277d78b86372ff07bf3f5a25d67e "pdflatex"
+  "report.tex" 1748602059 24872 66421921a1484df7fc93dca6e29bf2a4 ""
   (generated)
   "report.aux"
   "report.log"
