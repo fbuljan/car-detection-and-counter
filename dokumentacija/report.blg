@@ -2,47 +2,45 @@ This is BibTeX, Version 0.99d (TeX Live 2023)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: report.aux
 The style file: plainnat.bst
-I found no \citation commands---while reading file report.aux
 Database file #1: literature.bib
-You've used 0 entries,
+You've used 2 entries,
             2773 wiz_defined-function locations,
-            592 strings with 4834 characters,
-and the built_in function-call counts, 33 in all, are:
-= -- 0
-> -- 0
-< -- 0
-+ -- 0
-- -- 0
-* -- 2
-:= -- 10
-add.period$ -- 0
-call.type$ -- 0
-change.case$ -- 0
-chr.to.int$ -- 0
-cite$ -- 0
-duplicate$ -- 0
-empty$ -- 1
-format.name$ -- 0
-if$ -- 1
+            604 strings with 5270 characters,
+and the built_in function-call counts, 1147 in all, are:
+= -- 99
+> -- 78
+< -- 1
++ -- 26
+- -- 24
+* -- 94
+:= -- 179
+add.period$ -- 6
+call.type$ -- 2
+change.case$ -- 14
+chr.to.int$ -- 2
+cite$ -- 4
+duplicate$ -- 50
+empty$ -- 78
+format.name$ -- 26
+if$ -- 237
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 0
-newline$ -- 8
-num.names$ -- 0
-pop$ -- 0
+missing$ -- 2
+newline$ -- 18
+num.names$ -- 8
+pop$ -- 26
 preamble$ -- 1
-purify$ -- 0
+purify$ -- 12
 quote$ -- 0
-skip$ -- 1
+skip$ -- 46
 stack$ -- 0
-substring$ -- 0
-swap$ -- 0
-text.length$ -- 0
+substring$ -- 36
+swap$ -- 11
+text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 0
+type$ -- 22
 warning$ -- 0
-while$ -- 0
+while$ -- 9
 width$ -- 0
-write$ -- 7
-(There was 1 error message)
+write$ -- 33

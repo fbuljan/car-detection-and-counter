@@ -113,32 +113,141 @@ This approach directly utilizes a Faster R-CNN model pre-trained on the \textbf{
     \item \textbf{Application}: This method is straightforward, requiring no additional training. It applies a universal object detector to our specific task.
 \end{itemize}
 
-\subsection{Fine-tuned Faster R-CNN}
-This strategy involves adapting a pre-trained Faster R-CNN model to specialize in car detection through \textbf{fine-tuning}.
+\subsection{Fine-tuning Faster R-CNN}
+\label{ssec:fasterrcnn_finetuning}
 
-\begin{itemize}
-    \item \textbf{Logic}: Instead of using the generic COCO weights entirely, we load a model that has undergone additional training on a car-specific dataset. This process re-trains the model's final layers, adjusting its classification capabilities to primarily distinguish between "background" and "car" (often mapping 'car' to class ID 1 in this specialized setup).
-    \item \textbf{Application}: Fine-tuning allows the model to learn more precise and relevant features for car identification, potentially yielding higher accuracy and better performance specifically for our target domain compared to the generically pre-trained version.
-\end{itemize}
+Fine-tuning is a crucial technique for adapting a pre-trained deep learning model to a new, specific task or dataset, often with limited data. Instead of training a model from scratch, which is computationally expensive and requires vast amounts of data, fine-tuning leverages the robust features learned by a model on a large general dataset (like COCO) and adjusts them to the nuances of the target dataset.
 
-By comparing these two implementations, we analyze the impact of \textbf{transfer learning} and task-specific adaptation on the model's effectiveness in car detection.
+Our implementation details the process of fine-tuning a Faster R-CNN model (specifically \texttt{fasterrcnn\_resnet50\_fpn}) to accurately detect only cars.
+
+\subsubsection{Fine-Tuning Process}
+
+\begin{enumerate}
+    \item \textbf{Model Initialization and Customization}:
+    We begin by loading a \texttt{fasterrcnn\_resnet50\_fpn} model with its original pre-trained weights from the COCO dataset. This provides a strong starting point with general object recognition capabilities. The crucial step for adaptation is modifying the model's final classification head. The original \texttt{box\_predictor} (which predicts class scores for 80+ COCO categories) is replaced with a new \texttt{FastRCNNPredictor}. This new predictor is configured to output probabilities for only \textbf{two classes}: background and car (\texttt{NUM\_CLASSES = 2}). This effectively re-purposes the model to focus exclusively on our target object.
+
+    \item \textbf{Dataset Preparation}:
+    We use the \texttt{CocoDetection} dataset class from \texttt{torchvision} to load our car-specific images and their corresponding annotations. These annotations are in the COCO format, which includes bounding box coordinates and category IDs. A key aspect of data preparation is mapping the original COCO category ID for 'car' (which is 3) to a new local label (1) consistent with our two-class setup. This ensures the model correctly associates the car detections in our dataset with the new 'car' class in its adapted output layer. Images are transformed into PyTorch tensors, and a \texttt{DataLoader} is set up to efficiently batch and shuffle the training data. A custom \texttt{collate\_fn} handles the varied number of objects per image in a batch.
+
+    \item \textbf{Training Configuration}:
+    An Adam optimizer is selected to update the model's parameters during training. Importantly, only the parameters that require gradients (i.e., those that are trainable) are updated, which typically includes the newly added classification head and potentially some earlier layers if they are unfrozen. The training is configured for a specific number of epochs (\texttt{NUM\_EPOCHS = 10}) and a learning rate (\texttt{LR = 1e-4}).
+
+    \item \textbf{Training Loop}:
+    The model is set to training mode (\texttt{model.train()}). The training loop iterates through the \texttt{train\_loader}, processing images in batches. For each batch, target annotations are processed: bounding box coordinates are converted to the expected format (\texttt{[x\_min, y\_min, x\_max, y\_max]}), and COCO category IDs are mapped to our custom 'car' label. Images without valid car annotations are handled to prevent errors. The model performs a forward pass (\texttt{loss\_dict = model(images, formatted\_targets)}), which calculates the loss values for region proposal, classification, and bounding box regression. The losses are summed, backpropagated (\texttt{losses.backward()}), and the optimizer updates the model's weights (\texttt{optimizer.step()}). Progress is monitored via a \texttt{tqdm} progress bar, showing the loss for each batch.
+\end{enumerate}
+
+Through this fine-tuning process, the Faster R-CNN model transitions from a general-purpose object detector to a specialized and effective car detector, leveraging its pre-trained knowledge while adapting to the specific characteristics of our car dataset.
 
 % --- 3. RESULTS ---
 \section{Results}
 \label{sec:results}
 This section presents the results of our experiments with YOLO and Faster R-CNN on a chosen dataset. 
+\subsection{Results: YOLOv8l}
+\label{ssec:results_yolo}
 
+This section details the performance evaluation of the YOLOv8l model for car detection. The model's performance was assessed on a test dataset comprising 54 images with a total of 91 car instances.
+
+The key performance metrics obtained are as follows:
+
+\begin{itemize}
+    \item \textbf{Precision (P)}: The model achieved a precision of \textbf{0.919}. This indicates that 91.9\% of the objects detected by the model were indeed cars, highlighting a very low rate of false positives.
+    \item \textbf{Recall (R)}: The recall stands at \textbf{0.857}. This means that the model successfully identified 85.7\% of all actual car instances present in the test set, demonstrating a good ability to find most of the relevant objects.
+    \item \textbf{mAP@50}: The Mean Average Precision at an Intersection over Union (IoU) threshold of 0.50 is \textbf{0.904}. This high value signifies that the model is highly effective at detecting cars and localizing them with at least 50\% overlap with the ground truth bounding boxes.
+    \item \textbf{mAP50-95}: The Mean Average Precision averaged across IoU thresholds from 0.50 to 0.95 (with steps of 0.05) is \textbf{0.360}. This metric provides a comprehensive assessment of the model's performance across varying degrees of localization accuracy.
+\end{itemize}
+
+\textbf{Analysis}:
+
+The YOLOv8l model demonstrates strong performance in car detection, particularly in terms of precision and recall. The high precision (0.919) indicates that when the model identifies an object as a car, it is very likely correct. The good recall (0.857) suggests that the model is effective at finding a large proportion of the cars present in the images.
+
+The mAP@50 of 0.904 is exceptionally high, indicating that YOLOv8l is very reliable at detecting the presence of cars and providing reasonably accurate bounding boxes. This makes it suitable for applications where the primary concern is identifying whether an object is present and roughly where it is located.
+
+However, the mAP50-95 value of 0.360, while respectable, is considerably lower than the mAP@50. This difference highlights that while the model is excellent at detecting cars with a loose localization requirement (IoU=0.50), its performance for very precise bounding box localization (IoU=0.75 and higher) is more challenging. This is a common characteristic of single-stage detectors like YOLO, which prioritize speed over extreme localization precision compared to two-stage detectors.
+
+Overall, YOLOv8l proves to be a highly efficient and accurate solution for car detection, offering a strong balance between speed and performance for this specific task.
+
+\subsection{Faster R-CNN Results}
+\subsubsection{Results: Faster R-CNN without Fine-Tuning}
+\label{ssec:results_fasterrcnn_pretrained}
+
+This section summarizes the performance of the Faster R-CNN model using only its \textbf{pre-trained COCO weights}, without fine-tuning for car detection.
+
+\begin{itemize}
+    \item \textbf{Overall mAP}: The model achieved an overall Mean Average Precision (mAP) of \textbf{0.2439}.
+    \item \textbf{mAP@50}: At an Intersection over Union (IoU) threshold of 0.50, the mAP was \textbf{0.7768}, indicating reasonable object detection and localization at a relaxed overlap criterion.
+    \item \textbf{mAP@75}: For a stricter IoU of 0.75, the mAP significantly dropped to \textbf{0.0645}, showing limitations in precise bounding box localization.
+    \item \textbf{Performance by Size}: The model performed notably better on \textbf{large objects (mAP: 0.4650)} compared to medium (mAP: 0.2457) and struggled with \textbf{small objects (mAP: -1.0000)}.
+    \item \textbf{Average Recall (AR@100)}: The recall over 100 detections was \textbf{0.3575}.
+\end{itemize}
+
+\textbf{Analysis}: While the pre-trained Faster R-CNN can generally detect objects (high mAP@50), its performance for accurate localization (low mAP@75) and small object detection is limited. This is expected as the model was trained for general object recognition, not specialized car detection. Specific per-class mAP for 'car' was not available in this output.
+
+\subsection{Results: Fine-tuned Faster R-CNN}
+\label{ssec:results_fasterrcnn_finetuned}
+
+This section presents the performance evaluation of the Faster R-CNN model after it has undergone fine-tuning on a car-specific dataset. The results are compared against the baseline performance of the pre-trained model to highlight the impact of domain adaptation.
+
+The key evaluation metrics are summarized below:
+
+\begin{itemize}
+    \item \textbf{Overall mAP}: The overall Mean Average Precision (mAP) for the fine-tuned model is significantly higher at \textbf{0.6396}. This represents a substantial improvement compared to the 0.2439 achieved by the pre-trained model, indicating a much better balance of localization and classification accuracy.
+    \item \textbf{mAP@50}: At an IoU threshold of 0.50, the mAP reached an impressive \textbf{0.9987}. This near-perfect score demonstrates that the fine-tuned model is highly effective at detecting cars with at least 50\% overlap, signifying robust presence detection.
+    \item \textbf{mAP@75}: For the stricter IoU threshold of 0.75, the mAP dramatically improved to \textbf{0.7541}. This is a critical improvement from the 0.0645 of the pre-trained model, indicating that fine-tuning has enabled the model to localize cars with significantly higher precision.
+    \item \textbf{Performance by Object Size}:
+    \begin{itemize}
+        \item \textbf{mAP for Medium objects}: The mAP for medium-sized objects is \textbf{0.6284}, showing strong performance.
+        \item \textbf{mAP for Large objects}: For large objects, the mAP is \textbf{0.7378}, maintaining high accuracy.
+        \item \textbf{mAP for Small objects}: The mAP for small objects remains at \textbf{-1.0000}, suggesting that even with fine-tuning, detecting very small instances of cars remains a challenge for this configuration.
+    \end{itemize}
+    \item \textbf{Average Recall (AR)}:
+    \begin{itemize}
+        \item The maximum Average Recall over 100 detections per image (MAR@100) is \textbf{0.6973}. This indicates a much-improved ability to retrieve ground truth cars compared to the pre-trained model's 0.3575.
+        \item Recall for large objects (0.7818) is higher than for medium objects (0.6823), consistent with general object detection trends.
+    \end{itemize}
+    \item \textbf{Classes Detected}: The output `classes: 1.0000` confirms that the model is now specifically focused on detecting a single target class, which is 'car', as intended by the fine-tuning process.
+\end{itemize}
+
+\textbf{Analysis}: The results unequivocally demonstrate the profound impact of fine-tuning on the Faster R-CNN model's performance for car detection. There is a substantial increase across all mAP metrics, particularly in mAP@75, which signifies a remarkable improvement in the precision of bounding box localization. The near-perfect mAP@50 further underscores the model's reliability in identifying the presence of cars. While the detection of small objects continues to be a limitation, the overall enhancement in accuracy and recall validates fine-tuning as an extremely effective strategy for adapting general-purpose object detectors to specific domain tasks. This specialization allows the model to leverage its pre-trained feature extraction capabilities while learning the subtle nuances required for highly accurate car detection.
 % --- 3. CONCLUSION ---
 \section{Conclusion}
 \label{sec:conclusion}
 
+This project successfully explored and implemented state-of-the-art deep learning models, YOLO and Faster R-CNN, for the task of car detection and counting in digital images. Our comparative analysis provides valuable insights into the performance characteristics of these distinct architectures under various conditions, particularly highlighting the profound impact of fine-tuning.
+
+The YOLOv8l model demonstrated strong performance in car detection, characterized by high Precision (0.919) and Recall (0.857), leading to an impressive mAP@50 of 0.904. This indicates YOLO's robust capability for real-time presence detection and reasonable localization. However, its mAP50-95 score of 0.360 suggests that while fast and generally accurate, its precise bounding box localization for stricter IoU thresholds is less refined compared to multi-stage detectors.
+
+The Faster R-CNN implementation showcased a clear dichotomy based on its training regimen:
+\begin{itemize}
+    \item When utilizing only its pre-trained COCO weights, Faster R-CNN exhibited an overall mAP of 0.2439 and a significantly lower mAP@75 of 0.0645. It struggled particularly with precise localization and the detection of small objects, underscoring the limitations of a generic model when applied to a specific domain without adaptation.
+    \item Conversely, the fine-tuned Faster R-CNN model achieved a dramatic improvement across all metrics. Its overall mAP surged to 0.6396, with a near-perfect mAP@50 of 0.9987 and a highly impressive mAP@75 of 0.7541. This substantial gain directly demonstrates the immense power of transfer learning and fine-tuning in specializing a model for a particular task. While it still faced challenges with very small objects (mAP: -1.0000), its ability to precisely localize cars was vastly superior to both the generic Faster R-CNN and, notably, to YOLO's stricter localization performance.
+\end{itemize}
+
+In summary, for applications prioritizing high precision in object localization and classification accuracy, especially when data is available for domain-specific training, fine-tuning a model like Faster R-CNN proves to be exceptionally effective. For scenarios demanding extreme real-time processing and where slightly less precise localization is acceptable, YOLO offers a compelling and highly efficient solution.
+
+\subsection{Future Trends and Work}
+
+The field of object detection is continuously evolving, and several avenues could extend this project:
+
+\begin{enumerate}
+    \item \textbf{Exploring Advanced Architectures}: Investigate newer object detection models, such as more recent YOLO versions (e.g., YOLOv9), or transformer-based architectures like DETR (Detection Transformer), which offer different trade-offs in terms of accuracy, speed, and complexity.
+    \item \textbf{Robustness to Challenging Conditions}: Enhance model performance under adverse conditions, including varying lighting, heavy occlusion, motion blur, and diverse weather conditions, through advanced data augmentation or specialized training techniques.
+    \item \textbf{Optimization for Edge Devices}: Quantize and optimize the models for deployment on resource-constrained embedded systems and edge devices (e.g., automotive platforms, drones), which is critical for real-world autonomous applications.
+    \item \textbf{Temporal Object Tracking}: Extend the capabilities from static image detection to multi-object tracking in video sequences, which involves associating detected objects across consecutive frames.
+    \item \textbf{Dataset Expansion and Diversity}: Further augment the training dataset with more diverse car types, angles, environments, and challenging scenarios to improve the model's generalization capabilities.
+    \item \textbf{Explainable AI (XAI)}: Explore methods to interpret why the models make certain detection decisions, increasing trust and facilitating debugging in critical applications.
+\end{enumerate}
+
+
 
 % --- 4. LITERATURE ---
-\bibliographystyle{plainnat} % A popular style for scientific papers
-\bibliography{literature} 
+\renewcommand{\refname}{Literature} 
 
-
+%\section{Literature}
 \label{sec:literature}
 
+\nocite{*} 
+
+\bibliographystyle{plainnat} % A popular style for scientific papers
+\bibliography{literature}
 
 \end{document}
