@@ -223,7 +223,13 @@ class CarCounterGUI(tk.Tk):
                 new_h = canvas_h
                 new_w = int(canvas_h * img_ratio)
 
-            img_resized = img.resize((new_w, new_h), Image.ANTIALIAS)
+            try:
+                resample_filter = Image.Resampling.LANCZOS
+            except AttributeError:
+                resample_filter = Image.ANTIALIAS  # fallback for older versions
+
+            img_resized = img.resize((new_w, new_h), resample_filter)
+            #img_resized = img.resize((new_w, new_h), Image.ANTIALIAS)
             photo = ImageTk.PhotoImage(img_resized)
 
             def show_image():
