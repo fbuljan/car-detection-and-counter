@@ -1,89 +1,60 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[conference]{IEEEtran} 
 
 % --- PACKAGES ---
 \usepackage[utf8]{inputenc}
-\usepackage{amsmath}
-\usepackage{graphicx}
-\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref} % For clickable links and citations
-\usepackage[square,numbers,sort&compress]{natbib} % For bibliography management
-\usepackage{geometry} % For page margins
-\geometry{a4paper, margin=1in} % Set 1-inch margins on all sides
-\usepackage{fancyhdr} % For custom headers/footers
-\pagestyle{fancy}
-\fancyhf{} % Clear all header and footer fields
-\fancyhead[L]{Digital Image Processing and Analysis Project} % Left header
-\fancyhead[R]{\thepage} % Right header with page number
-\renewcommand{\headrulewidth}{0.4pt} % Thin line under the header
-\usepackage{setspace} % For line spacing
-\onehalfspacing % Set line spacing to 1.5
+\usepackage{amsmath} % For mathematical equations
+\usepackage{graphicx} % For including graphics
+\usepackage{cite}     
+
+
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref} 
 
 % --- DOCUMENT START ---
 \begin{document}
 
 % --- TITLE INFORMATION ---
-\title{\textbf{Digital Image Processing and Analysis Project Report: \\ [0.5em] Object Detection using YOLO and Faster R-CNN}}
-\author{
-    Lovro Akmačić \\
-    \small 0036537589 \\
-    \small Faculty of Electrical Engineering and Computing \\
-    \small lovro.akmacic@fer.hr
-    \and
-    Filip Buljan \\
-    \small 0036539840 \\
-    \small Faculty of Electrical Engineering and Computing \\
-    \small filip.buljan@fer.hr
-    \and
-    Lucia Crvelin \\
-    \small 0036540219 \\
-    \small Faculty of Electrical Engineering and Computing \\
-    \small lucia.crvelin@fer.hr
-    \and
-    Tomislav Čupić \\
-    \small 00365411259 \\
-    \small Faculty of Electrical Engineering and Computing \\
-    \small tomislav.cupic@fer.hr
-    \and
-    Lorena Švenjak \\
-    \small 0119039893 \\
-    \small Faculty of Electrical Engineering and Computing \\
-    \small lorena.svenjak@fer.hr
+\title{\textbf{OBJECT DETECTION IN DIGITAL IMAGES: A COMPARATIVE STUDY OF YOLO AND FASTER R-CNN}}
+
+\author{\IEEEauthorblockN{Lovro Akmačić, Filip Buljan, Lucia Crvelin, Tomislav Čupić, Lorena Švenjak}
+\IEEEauthorblockA{\textit{Faculty of Electrical Engineering and Computing} \\
+\textit{University of Zagreb} \\
+Zagreb, Croatia \\
+\{lovro.akmacic, filip.buljan, lucia.crvelin, tomislav.cupic, lorena.svenjak\}@fer.hr}
 }
-\date{\today} % Automatically inserts current date
 
 
-\maketitle % Display the title, authors, and date
+\maketitle 
 
 % --- ABSTRACT/SUMMARY ---
 \begin{abstract}
 This report details a digital image processing and analysis project focused on object detection. We explore and implement state-of-the-art deep learning models, specifically YOLO (You Only Look Once) and Faster R-CNN (Region-based Convolutional Neural Network), for their efficacy in accurately identifying and localizing objects within images. The project aims to compare the performance, advantages, and limitations of these two prominent architectures in a practical application. We will discuss the theoretical underpinnings of each method, their practical implementation, and the insights gained from their application to a relevant dataset.
 \end{abstract}
 
-\newpage % Start a new page after the abstract
-
+ 
 % --- 1. DESCRIPTION OF AREA AND ACTIVITY ---
-\section{Description of Area and Activity}
+\section{\uppercase{Description of Area and Activity}} 
 \label{sec:intro}
 
 Digital image processing and analysis is a multidisciplinary field at the intersection of computer science, engineering, and mathematics, focusing on methods for manipulating and analyzing digital images. Its applications are vast, ranging from medical imaging and remote sensing to autonomous vehicles and security systems.
 
 Our project delves into the sub-area of object detection, a fundamental task in computer vision that involves identifying instances of semantic objects of a certain class (e.g., humans, cars, animals) in digital images or videos and localizing them by drawing bounding boxes around them. The primary activity of this project involves the application and comparative analysis of two prominent deep learning-based object detection frameworks: YOLO and Faster R-CNN.
 
-% --- 2. OVERVIEW OF METHODS USED: YOLO AND FASTER R-CNN ---
-\section{Overview of Methods Used}
+% --- 2. OVERVIEW OF METHODS USED ---
+\section{\uppercase{Overview of Methods Used}}
 \label{sec:methods}
 
 This section will provide a detailed technical overview of the two primary object detection methodologies employed in this project: YOLO and Faster R-CNN.
 
 \subsection{YOLO (You Only Look Once)}
-\label{ssec:yolo}
-YOLO is a single-shot detector known for its speed and real-time processing capabilities. Unlike traditional object detection systems that separate the object detection pipeline into distinct stages (e.g., region proposal, classification, non-maximum suppression), YOLO processes the entire image in a single pass. It divides the image into a grid and simultaneously predicts bounding boxes and class probabilities for each grid cell. We will discuss its architectural components, including the backbone network, detection heads, and the loss function used for training.
+\label{ssec:yolo_overview} 
+YOLO is a single-shot detector known for its speed and real-time processing capabilities. Unlike traditional object detection systems that separate the object detection pipeline into distinct stages (e.g., region proposal, classification, non-maximum suppression), YOLO processes the entire image in a single pass. It divides the image into a grid and simultaneously predicts bounding boxes and class probabilities for each grid cell. We will discuss its architectural components, including the backbone network, detection heads, and the loss function used for training \cite{redmon2016you}. Different versions of YOLO (e.g., YOLOv3 \cite{redmon2018yolov3}, YOLOv4 \cite{bochkovskiy2020yolov4}) will be briefly mentioned, highlighting their key improvements.
 
 \subsection{Faster R-CNN (Region-based Convolutional Neural Network)}
 \label{ssec:fastrcnn_overview} 
-Faster R-CNN is a two-stage object detector that significantly improved upon its predecessors (R-CNN and Fast R-CNN) by introducing the Region Proposal Network (RPN). The RPN is a fully convolutional network that simultaneously predicts object bounds and objectiveness scores at each position. The proposed regions are then fed into the Fast R-CNN detection network for classification and bounding box regression refinement. We will elaborate on its architecture, including the shared convolutional features, RPN operation, RoI (Region of Interest) pooling, and the classification and regression heads.
+Faster R-CNN is a two-stage object detector that significantly improved upon its predecessors (R-CNN and Fast R-CNN) by introducing the Region Proposal Network (RPN) \cite{ren2015faster}. The RPN is a fully convolutional network that simultaneously predicts object bounds and objectiveness scores at each position. The proposed regions are then fed into the Fast R-CNN detection network for classification and bounding box regression refinement. We will elaborate on its architecture, including the shared convolutional features, RPN operation, RoI (Region of Interest) pooling, and the classification and regression heads.
 
 
-\section{Implementation of YOLO for Car Detection}
+\section{\uppercase{Implementation of YOLO for Car Detection}} 
 \label{sec:yolo_implementation}
 
 Our YOLO implementation focuses on efficiently detecting and counting cars in images. The core logic revolves around leveraging a \textbf{pre-trained YOLOv8 model} from the \texttt{ultralytics} framework. This choice significantly streamlines the development process by utilizing a model already trained on a vast dataset (COCO), thus benefiting from \textbf{transfer learning} and eliminating the need for extensive custom training.
@@ -100,16 +71,14 @@ The implementation follows a clear workflow:
 
 In essence, the implementation provides a robust and automated pipeline for car detection, focusing on clear, efficient use of a powerful pre-trained model combined with standard image processing techniques for visualization and data handling.
 
-\subsection{Faster R-CNN (Region-based Convolutional Neural Network)}
-\label{ssec:fastrcnn}
-Faster R-CNN is a two-stage object detector that significantly improved upon its predecessors (R-CNN and Fast R-CNN) by introducing the Region Proposal Network (RPN). The RPN is a fully convolutional network that simultaneously predicts object bounds and objectiveness scores at each position. The proposed regions are then fed into the Fast R-CNN detection network for classification and bounding box regression refinement. 
 
-\section{Implementation of Faster R-CNN: Pre-trained vs. Fine-tuned}
+\section{\uppercase{Implementation of Faster R-CNN: Pre-trained vs. Fine-tuned}} 
 \label{sec:fasterrcnn_implementations}
 
 Our project implemented Faster R-CNN using two distinct strategies to detect cars: one leveraging a \textbf{generically pre-trained model} and another employing a \textbf{fine-tuned model}. Both methods use the \texttt{torchvision} library for model handling.
 
 \subsection{Pre-trained Faster R-CNN}
+\label{ssec:pretrained_fasterrcnn_impl} 
 This approach directly utilizes a Faster R-CNN model pre-trained on the \textbf{COCO dataset}. The model comes with extensive knowledge of 80 different object categories, including cars.
 
 \begin{itemize}
@@ -118,7 +87,7 @@ This approach directly utilizes a Faster R-CNN model pre-trained on the \textbf{
 \end{itemize}
 
 \subsection{Fine-tuning Faster R-CNN}
-\label{ssec:fasterrcnn_finetuning}
+\label{ssec:fasterrcnn_finetuning_impl} 
 
 Fine-tuning is a crucial technique for adapting a pre-trained deep learning model to a new, specific task or dataset, often with limited data. Instead of training a model from scratch, which is computationally expensive and requires vast amounts of data, fine-tuning leverages the robust features learned by a model on a large general dataset (like COCO) and adjusts them to the nuances of the target dataset.
 
@@ -143,9 +112,10 @@ Our implementation details the process of fine-tuning a Faster R-CNN model (spec
 Through this fine-tuning process, the Faster R-CNN model transitions from a general-purpose object detector to a specialized and effective car detector, leveraging its pre-trained knowledge while adapting to the specific characteristics of our car dataset.
 
 % --- 3. RESULTS ---
-\section{Results}
+\section{\uppercase{Results}} 
 \label{sec:results}
 This section presents the results of our experiments with YOLO and Faster R-CNN on a chosen dataset. 
+
 \subsection{Results: YOLOv8l}
 \label{ssec:results_yolo}
 
@@ -171,6 +141,8 @@ However, the mAP50-95 value of 0.360, while respectable, is considerably lower t
 Overall, YOLOv8l proves to be a highly efficient and accurate solution for car detection, offering a strong balance between speed and performance for this specific task.
 
 \subsection{Faster R-CNN Results}
+\label{ssec:fasterrcnn_results_overall} 
+
 \subsubsection{Results: Faster R-CNN without Fine-Tuning}
 \label{ssec:results_fasterrcnn_pretrained}
 
@@ -186,7 +158,7 @@ This section summarizes the performance of the Faster R-CNN model using only its
 
 \textbf{Analysis}: While the pre-trained Faster R-CNN can generally detect objects (high mAP@50), its performance for accurate localization (low mAP@75) and small object detection is limited. This is expected as the model was trained for general object recognition, not specialized car detection. Specific per-class mAP for 'car' was not available in this output.
 
-\subsection{Results: Fine-tuned Faster R-CNN}
+\subsubsection{Results: Fine-tuned Faster R-CNN}
 \label{ssec:results_fasterrcnn_finetuned}
 
 This section presents the performance evaluation of the Faster R-CNN model after it has undergone fine-tuning on a car-specific dataset. The results are compared against the baseline performance of the pre-trained model to highlight the impact of domain adaptation.
@@ -212,8 +184,9 @@ The key evaluation metrics are summarized below:
 \end{itemize}
 
 \textbf{Analysis}: The results unequivocally demonstrate the profound impact of fine-tuning on the Faster R-CNN model's performance for car detection. There is a substantial increase across all mAP metrics, particularly in mAP@75, which signifies a remarkable improvement in the precision of bounding box localization. The near-perfect mAP@50 further underscores the model's reliability in identifying the presence of cars. While the detection of small objects continues to be a limitation, the overall enhancement in accuracy and recall validates fine-tuning as an extremely effective strategy for adapting general-purpose object detectors to specific domain tasks. This specialization allows the model to leverage its pre-trained feature extraction capabilities while learning the subtle nuances required for highly accurate car detection.
-% --- 3. CONCLUSION ---
-\section{Conclusion}
+
+% --- 4. CONCLUSION ---
+\section{\uppercase{Conclusion}} 
 \label{sec:conclusion}
 
 This project successfully explored and implemented state-of-the-art deep learning models, YOLO and Faster R-CNN, for the task of car detection and counting in digital images. Our comparative analysis provides valuable insights into the performance characteristics of these distinct architectures under various conditions, particularly highlighting the profound impact of fine-tuning.
@@ -242,16 +215,10 @@ The field of object detection is continuously evolving, and several avenues coul
 \end{enumerate}
 
 
+% --- REFERENCES (formerly LITERATURE) ---
+% \nocite{*} 
 
-% --- 4. LITERATURE ---
-\renewcommand{\refname}{Literature} 
-
-%\section{Literature}
-\label{sec:literature}
-
-\nocite{*} 
-
-\bibliographystyle{plainnat} % A popular style for scientific papers
-\bibliography{literature}
+\bibliographystyle{IEEEtran} 
+\bibliography{literature}  
 
 \end{document}
