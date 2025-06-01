@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex report"] 1748795772 "report.aux" "report.bbl" "report" 1748795773 0
+["bibtex report"] 1748796518 "report.aux" "report.bbl" "report" 1748796519 0
   "./literature.bib" 1748795649 1101 72ba8888f51037f938b2b10a03a35fd2 ""
   "/usr/local/texlive/2023/texmf-dist/bibtex/bst/ieeetran/IEEEtran.bst" 1440712899 57748 7c8250ecf02814ce6ddc0cdbb63df1dd ""
-  "report.aux" 1748795773 4667 86a282c31c88c09146b922abb13ddea3 "pdflatex"
+  "report.aux" 1748796519 4489 d023514a340a6368b70e626105fc404b "pdflatex"
   (generated)
   "report.bbl"
   "report.blg"
   (rewritten before read)
-["pdflatex"] 1748795772 "/Users/LC/Desktop/car-detection-and-counter/dokumentacija/report.tex" "report.pdf" "report" 1748795773 0
-  "/Users/LC/Desktop/car-detection-and-counter/dokumentacija/report.tex" 1748795772 23489 49e529f188621191b7dd7cbc124f74da ""
+["pdflatex"] 1748796519 "/Users/LC/Desktop/car-detection-and-counter/dokumentacija/report.tex" "report.pdf" "report" 1748796519 0
+  "/Users/LC/Desktop/car-detection-and-counter/dokumentacija/report.tex" 1748796517 22905 18d0f43709be08ad53a44e803fd8a281 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -100,10 +100,10 @@
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1699361199 4623355 b8cad38412faebe1ce5b780a45db67bd ""
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1699361152 7883460 208b230ddbdd17f914eb8ea78e19c312 ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
-  "report.aux" 1748795773 4667 86a282c31c88c09146b922abb13ddea3 "pdflatex"
-  "report.bbl" 1748795772 1920 12eee45a4e5fa6f51e65e7a9c3e4984f "bibtex report"
-  "report.out" 1748795773 3357 2f0bd145c394026e36673614664326b5 "pdflatex"
-  "report.tex" 1748795772 23489 49e529f188621191b7dd7cbc124f74da ""
+  "report.aux" 1748796519 4489 d023514a340a6368b70e626105fc404b "pdflatex"
+  "report.bbl" 1748796519 1216 5bb8fb461a73d6ba7f81bf2cc840edd8 "bibtex report"
+  "report.out" 1748796519 3357 2f0bd145c394026e36673614664326b5 "pdflatex"
+  "report.tex" 1748796517 22905 18d0f43709be08ad53a44e803fd8a281 ""
   (generated)
   "report.aux"
   "report.log"

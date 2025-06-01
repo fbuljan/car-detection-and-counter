@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.7)  1 JUN 2025 18:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.7)  1 JUN 2025 18:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -481,12 +481,11 @@ Underfull \hbox (badness 3118) in paragraph at lines 108--110
 \OT1/ptm/m/n/10 'car' la-bel. Im-ages with-out valid car an-no-ta-tions
  []
 
-[2]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `\uppercase' on input line 115.
 
-[3]
+[2] [3]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `\uppercase' on input line 189.
@@ -497,7 +496,7 @@ Underfull \hbox (badness 2951) in paragraph at lines 210--211
 hance
  []
 
-(./report.bbl [4])
+(./report.bbl)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -509,20 +508,18 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[5
-
-] (./report.aux)
+[4] (./report.aux)
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 2F0BD145C394026E36673614664326B5;3357.
  ) 
 Here is how much of TeX's memory you used:
- 9982 strings out of 476025
- 161669 string characters out of 5790017
+ 9975 strings out of 476025
+ 161542 string characters out of 5790017
  1872388 words of memory out of 5000000
- 30270 multiletter control sequences out of 15000+600000
+ 30267 multiletter control sequences out of 15000+600000
  547168 words of font info for 94 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,8n,76p,902b,605s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,8n,76p,902b,609s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
 ></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><
 /usr/local/texlive/2023/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/loc
@@ -530,10 +527,10 @@ al/texlive/2023/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive
 /2023/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2023/tex
 mf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2023/texmf-dist/fo
 nts/type1/urw/times/utmri8a.pfb>
-Output written on report.pdf (5 pages, 118076 bytes).
+Output written on report.pdf (4 pages, 115552 bytes).
 PDF statistics:
- 169 PDF objects out of 1000 (max. 8388607)
- 146 compressed objects within 2 object streams
- 42 named destinations out of 1000 (max. 500000)
+ 158 PDF objects out of 1000 (max. 8388607)
+ 136 compressed objects within 2 object streams
+ 38 named destinations out of 1000 (max. 500000)
  137 words of extra memory for PDF output out of 10000 (max. 10000000)
 

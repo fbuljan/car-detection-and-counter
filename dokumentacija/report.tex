@@ -43,15 +43,15 @@ Our project delves into the sub-area of object detection, a fundamental task in 
 \section{\uppercase{Overview of Methods Used}}
 \label{sec:methods}
 
-This section will provide a detailed technical overview of the two primary object detection methodologies employed in this project: YOLO and Faster R-CNN.
+This section will provide a technical overview of the two primary object detection methodologies employed in this project: YOLO and Faster R-CNN.
 
 \subsection{YOLO (You Only Look Once)}
 \label{ssec:yolo_overview} 
-YOLO is a single-shot detector known for its speed and real-time processing capabilities. Unlike traditional object detection systems that separate the object detection pipeline into distinct stages (e.g., region proposal, classification, non-maximum suppression), YOLO processes the entire image in a single pass. It divides the image into a grid and simultaneously predicts bounding boxes and class probabilities for each grid cell. We will discuss its architectural components, including the backbone network, detection heads, and the loss function used for training \cite{redmon2016you}. Different versions of YOLO (e.g., YOLOv3 \cite{redmon2018yolov3}, YOLOv4 \cite{bochkovskiy2020yolov4}) will be briefly mentioned, highlighting their key improvements.
+YOLO is a single-shot detector known for its speed and real-time processing capabilities. Unlike traditional object detection systems that separate the object detection pipeline into distinct stages (e.g., region proposal, classification, non-maximum suppression), YOLO processes the entire image in a single pass. It divides the image into a grid and simultaneously predicts bounding boxes and class probabilities for each grid cell. 
 
 \subsection{Faster R-CNN (Region-based Convolutional Neural Network)}
 \label{ssec:fastrcnn_overview} 
-Faster R-CNN is a two-stage object detector that significantly improved upon its predecessors (R-CNN and Fast R-CNN) by introducing the Region Proposal Network (RPN) \cite{ren2015faster}. The RPN is a fully convolutional network that simultaneously predicts object bounds and objectiveness scores at each position. The proposed regions are then fed into the Fast R-CNN detection network for classification and bounding box regression refinement. We will elaborate on its architecture, including the shared convolutional features, RPN operation, RoI (Region of Interest) pooling, and the classification and regression heads.
+Faster R-CNN is a two-stage object detector that significantly improved upon its predecessors (R-CNN and Fast R-CNN) by introducing the Region Proposal Network (RPN) \cite{ren2015faster}. The RPN is a fully convolutional network that simultaneously predicts object bounds and objectiveness scores at each position. The proposed regions are then fed into the Fast R-CNN detection network for classification and bounding box regression refinement. 
 
 
 \section{\uppercase{Implementation of YOLO for Car Detection}} 
@@ -156,7 +156,7 @@ This section summarizes the performance of the Faster R-CNN model using only its
     \item \textbf{Average Recall (AR@100)}: The recall over 100 detections was \textbf{0.3575}.
 \end{itemize}
 
-\textbf{Analysis}: While the pre-trained Faster R-CNN can generally detect objects (high mAP@50), its performance for accurate localization (low mAP@75) and small object detection is limited. This is expected as the model was trained for general object recognition, not specialized car detection. Specific per-class mAP for 'car' was not available in this output.
+\textbf{Analysis}: While the pre-trained Faster R-CNN can generally detect objects (high mAP@50), its performance for accurate localization (low mAP@75) and small object detection is limited. This is expected as the model was trained for general object recognition, not specialized car detection. 
 
 \subsubsection{Results: Fine-tuned Faster R-CNN}
 \label{ssec:results_fasterrcnn_finetuned}
@@ -189,7 +189,7 @@ The key evaluation metrics are summarized below:
 \section{\uppercase{Conclusion}} 
 \label{sec:conclusion}
 
-This project successfully explored and implemented state-of-the-art deep learning models, YOLO and Faster R-CNN, for the task of car detection and counting in digital images. Our comparative analysis provides valuable insights into the performance characteristics of these distinct architectures under various conditions, particularly highlighting the profound impact of fine-tuning.
+This project successfully explored and implemented state-of-the-art deep learning models, YOLO and Faster R-CNN, for the task of car detection and counting in digital images. Our comparative analysis provides insights into the performance characteristics of these distinct architectures under various conditions, particularly highlighting the profound impact of fine-tuning.
 
 The YOLOv8l model demonstrated strong performance in car detection, characterized by high Precision (0.919) and Recall (0.857), leading to an impressive mAP@50 of 0.904. This indicates YOLO's robust capability for real-time presence detection and reasonable localization. However, its mAP50-95 score of 0.360 suggests that while fast and generally accurate, its precise bounding box localization for stricter IoU thresholds is less refined compared to multi-stage detectors.
 

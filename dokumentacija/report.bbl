@@ -20,17 +20,6 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
-\bibitem{redmon2016you}
-\BIBentryALTinterwordspacing
-J.~Redmon, S.~Divvala, R.~Girshick, and A.~Farhadi, ``You only look once: Unified, real-time object detection,'' \emph{Proceedings of the IEEE conference on computer vision and pattern recognition}, pp. 779--788, 2016. [Online]. Available: \url{https://arxiv.org/abs/1506.02640}
-\BIBentrySTDinterwordspacing
-
-\bibitem{redmon2018yolov3}
-J.~Redmon and A.~Farhadi, ``Yolov3: An incremental improvement,'' \emph{arXiv preprint arXiv:1804.02767}, 2018.
-
-\bibitem{bochkovskiy2020yolov4}
-A.~Bochkovskiy, C.-Y. Wang, and H.-Y.~M. Liao, ``Yolov4: Optimalflow and strong baseline for real-time object detection,'' \emph{arXiv preprint arXiv:2004.10934}, 2020.
-
 \bibitem{ren2015faster}
 \BIBentryALTinterwordspacing
 S.~Ren, K.~He, R.~Girshick, and J.~Sun, ``Faster r-cnn: Towards real-time object detection with region proposal networks,'' \emph{Advances in neural information processing systems}, vol.~28, 2015. [Online]. Available: \url{https://arxiv.org/abs/1506.01497}
