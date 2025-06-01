@@ -12,7 +12,7 @@ import cv2
 # Paths to detection scripts
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IMAGE_SCRIPT = os.path.join(BASE_DIR, "count_cars_generic.py")
-VIDEO_SCRIPT = os.path.join(BASE_DIR, "count_cars_video_generic.py")
+VIDEO_SCRIPT = os.path.join(BASE_DIR, "count_cars_video_generic_everyfourframes.py")
 
 class CarCounterGUI(tk.Tk):
     def __init__(self):
